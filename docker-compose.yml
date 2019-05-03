@@ -6,6 +6,9 @@ services:
     environment:
       - "MYSQL_ALLOW_EMPTY_PASSWORD=true"
 
+    expose:
+      - "3307"
+
     ports: 
       - "3307:3307"
 

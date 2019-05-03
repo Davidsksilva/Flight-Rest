@@ -7,19 +7,19 @@ import java.util.List;
 
 @Data
 @Entity
-public class CompanhiaAerea {
+public class FlightCompany {
 
     private @Id @GeneratedValue (strategy = GenerationType.SEQUENCE) Long id;
     private String name;
-    private int codigo;
+    private int code;
 
-    public CompanhiaAerea(){
+    public FlightCompany(){
 
     }
 
-    public CompanhiaAerea(String name, int codigo){
+    public FlightCompany(String name, int code){
 
         this.name = name;
-        this.codigo = codigo;
+        this.code = code;
     }
 }
