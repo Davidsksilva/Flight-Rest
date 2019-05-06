@@ -17,7 +17,7 @@ public class Flight {
     private String flight_day;
     private int num_seats;
     private float price;
-
+    private int taken_seats;
     @ManyToOne
     FlightCompany company;
 
@@ -25,7 +25,7 @@ public class Flight {
 
     }
 
-    public Flight(String origin, String destiny, String departure_time, String flight_day, float price, int num_seats, FlightCompany company){
+    public Flight(String origin, String destiny, String departure_time, String flight_day, float price, int num_seats,int taken_seats, FlightCompany company){
 
         this.origin= origin;
         this.destiny = destiny;
@@ -34,7 +34,8 @@ public class Flight {
         this.price = price;
         this.company = company;
         this.num_seats = num_seats;
+        this.taken_seats = taken_seats;
 
-        this.code = origin.substring(0,2) + destiny.substring(0,2) + this.company.getCode() + flight_day.substring(0,2).toUpperCase() + departure_time.substring(0,2);
+        this.code = this.company.getCode() + origin.substring(0,2) + destiny.substring(0,2) + flight_day.substring(0,2).toUpperCase() + departure_time.substring(0,2);
     }
 }
