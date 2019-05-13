@@ -70,50 +70,43 @@ public class LoadDatabase {
                     int price = getRandomIntegerBetweenRange(100, 200) * 10;
 
                     int num_taken_seats = getRandomIntegerBetweenRange(1, num_seats);
+                    // Destinations loop
+                    for (int w = 0; w < num_ufs;w++){
 
-                    int orig_index = getRandomIntegerBetweenRange(0, num_ufs-1);
+                        String orig = uf_list.get(w);
 
-                    while (true) {
-                        if (!completed_routes.contains(uf_list.get(orig_index)) || completed_routes.size() == uf_list.size()) {
-                            break;
-                        } else {
-                            orig_index = getRandomIntegerBetweenRange(0, num_ufs-1);
+                        int dest_index = getRandomIntegerBetweenRange(0, num_ufs-1);
+
+                        while (dest_index == w) {
+                            dest_index = getRandomIntegerBetweenRange(0, num_ufs-1);
                         }
-                    }
+                        String dest = uf_list.get(dest_index);
 
-                    String orig = uf_list.get(orig_index);
+                        int time = getRandomIntegerBetweenRange(5, 23);
+                        String departure_time = time + ":00";
 
-                    int dest_index = getRandomIntegerBetweenRange(0, num_ufs-1);
+                        Flight flight = new Flight(orig, dest, departure_time, "Monday", price, num_seats, num_taken_seats, company);
+                        Flight flight_back = new Flight(dest, orig, departure_time, "Friday", price, num_seats, num_taken_seats, company);
 
-                    while (dest_index == orig_index) {
-                        dest_index = getRandomIntegerBetweenRange(0, num_ufs-1);
-                    }
-                    String dest = uf_list.get(dest_index);
+                        f_repo.save(flight);
+                        f_repo.save(flight_back);
 
-                    int time = getRandomIntegerBetweenRange(5, 23);
-                    String departure_time = time + ":00";
+                        completed_routes.add(orig);
 
-                    Flight flight = new Flight(orig, dest, departure_time, "Monday", price, num_seats, num_taken_seats, company);
-                    Flight flight_back = new Flight(dest, orig, departure_time, "Friday", price, num_seats, num_taken_seats, company);
+                        // Passengers loop
+                        for (int k = 1; k <= num_taken_seats; k++) {
 
-                    f_repo.save(flight);
-                    f_repo.save(flight_back);
+                            String passenger_name = faker.name().fullName();
+                            int age = getRandomIntegerBetweenRange(20, 70);
+                            int gender_index = getRandomIntegerBetweenRange(0, 2);
+                            String gender = gender_list.get(gender_index);
 
-                    completed_routes.add(orig);
+                            Passenger passenger = new Passenger(passenger_name, age, gender, flight);
+                            Passenger passenger_back = new Passenger(passenger_name, age, gender, flight_back);
 
-                    // Passengers loop
-                    for (int k = 1; k <= num_taken_seats; k++) {
-
-                        String passenger_name = faker.name().fullName();
-                        int age = getRandomIntegerBetweenRange(20, 70);
-                        int gender_index = getRandomIntegerBetweenRange(0, 2);
-                        String gender = gender_list.get(gender_index);
-
-                        Passenger passenger = new Passenger(passenger_name, age, gender, flight);
-                        Passenger passenger_back = new Passenger(passenger_name, age, gender, flight_back);
-
-                        p_repo.save(passenger);
-                        p_repo.save(passenger_back);
+                            p_repo.save(passenger);
+                            p_repo.save(passenger_back);
+                        }
                     }
                 }
             }

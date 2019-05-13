@@ -24,21 +24,21 @@ public class FlightController {
     }
 
     @GetMapping(value = "/voos", produces = "application/json; charset=UTF-8")
-    public Resources<Resource<Flight>> allFlights (@RequestParam(value = "origin", defaultValue = "all") String origin, @RequestParam(value = "destiny", defaultValue = "all") String destiny ){
+    public Resources<Resource<Flight>> allFlights (@RequestParam(value = "origin", defaultValue = "all") String origin, @RequestParam(value = "destination", defaultValue = "all") String destination ){
 
         List<Flight> flights;
         List<Resource<Flight>> flights_resource;
-        if((destiny.equals("all")) && (origin.equals("all"))){
+        if((destination.equals("all")) && (origin.equals("all"))){
             flights = flight_repo.findAll();
         }
-        else if(destiny.equals("all")){
+        else if(destination.equals("all")){
             flights = flight_repo.findFlightsByOrigin(origin);
         }
         else if(origin.equals("all")){
-            flights = flight_repo.findFlightsByDestiny(destiny);
+            flights = flight_repo.findFlightsByDestination(destination);
         }
         else{
-            flights = flight_repo.findFlightsByOriginAndDestiny(origin,destiny);
+            flights = flight_repo.findFlightsByOriginAndDestination(origin,destination);
         }
 
         flights_resource = flights.stream()
@@ -47,7 +47,7 @@ public class FlightController {
 
 
         return new Resources<>(flights_resource,
-                linkTo(methodOn(FlightController.class).allFlights(origin,destiny)).withSelfRel());
+                linkTo(methodOn(FlightController.class).allFlights(origin,destination)).withSelfRel());
     }
 
     @GetMapping(value = "/voos/{id}", produces = "application/json; charset=UTF-8")
@@ -59,10 +59,10 @@ public class FlightController {
         return flight_assembler.toResource(flight);
     }
 
-    @GetMapping(value = "/companhias/{code}/voos", produces = "application/json; charset=UTF-8")
-    public Resources<Resource<Flight>> allFlightsCompany (@PathVariable int code){
+    @GetMapping(value = "/companhias/{id}/voos", produces = "application/json; charset=UTF-8")
+    public Resources<Resource<Flight>> allFlightsCompany (@PathVariable Long id){
 
-        List<Flight> flights = flight_repo.findFlightsByCompany_Code(code);
+        List<Flight> flights = flight_repo.findFlightsByCompany_Id(id);
         List<Resource<Flight>> flights_resource;
 
         flights_resource = flights.stream()
@@ -71,7 +71,7 @@ public class FlightController {
 
 
         return new Resources<>(flights_resource,
-                linkTo(methodOn(FlightController.class).allFlightsCompany(code)).withSelfRel());
+                linkTo(methodOn(FlightController.class).allFlightsCompany(id)).withSelfRel());
     }
 
     /*@PostMapping(value = "/companhias/{code}/voos", produces = "application/json; charset=UTF-8")

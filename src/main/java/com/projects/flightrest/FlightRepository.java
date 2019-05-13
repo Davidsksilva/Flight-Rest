@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface FlightRepository extends JpaRepository<Flight, Long> {
 
-    List<Flight> findFlightsByOriginAndDestiny(String origin, String destiny);
+    List<Flight> findFlightsByOriginAndDestination(String origin, String destiny);
 
-    List<Flight> findFlightsByCompany_Code(int code);
+    List<Flight> findFlightsByCompany_Id(Long code);
 
-    List<Flight> findFlightsByDestiny(String dest);
+    List<Flight> findFlightsByDestination(String dest);
 
     List<Flight> findFlightsByOrigin(String orig);
 
