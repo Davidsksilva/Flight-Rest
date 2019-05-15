@@ -22,7 +22,7 @@ public class LoadDatabase {
         return random.nextBoolean();
     }
 
-    @Bean
+    //@Bean
     CommandLineRunner initDatabase(PassengerRepository p_repo, FlightCompanyRepository fc_repo, FlightRepository f_repo) {
         return args -> {
 
