@@ -52,15 +52,28 @@ public class PassengerController {
 
     @PostMapping( value = "/voos/{id_flight}", produces = "application/json; charset=UTF-8")
     ResponseEntity<?> newPassenger(@RequestBody Passenger newPassenger, @PathVariable Long id_flight) throws URISyntaxException {
-
         Flight flight = flight_repo.findById(id_flight)
                 .orElseThrow(() -> new FlightNotFoundException(id_flight));
-        newPassenger.setFlight(flight);
-        Resource<Passenger> resource = passenger_assembler.toResource(passenger_repo.save(newPassenger));
 
-        return ResponseEntity
-                .created(new URI(resource.getId().expand().getHref()))
-                .body(resource);
+        int available_seats = flight.getNum_seats() - flight.getTaken_seats();
+
+        if(available_seats > 1){
+            flight.setTaken_seats(flight.getTaken_seats()+1);
+            newPassenger.setFlight(flight);
+            flight_repo.save(flight);
+            Resource<Passenger> resource = passenger_assembler.toResource(passenger_repo.save(newPassenger));
+
+            return ResponseEntity
+                    .created(new URI(resource.getId().expand().getHref()))
+                    .body(resource);
+        }
+        else{
+            return ResponseEntity
+                    .created(new URI("/voos/" + id_flight))
+                    .body(null);
+        }
+
+
     }
 
     @DeleteMapping (value = "/voos/{id_flight}/passageiros/{id_passenger}", produces = "application/json; charset=UTF-8")

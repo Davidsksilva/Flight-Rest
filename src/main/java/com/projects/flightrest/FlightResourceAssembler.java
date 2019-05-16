@@ -14,6 +14,6 @@ public class FlightResourceAssembler implements ResourceAssembler<Flight, Resour
 
         return new Resource<>(flight,
                 linkTo(methodOn(FlightController.class).oneFlight(flight.getId())).withSelfRel(),
-                linkTo(methodOn(FlightController.class).allFlights(null,null)).withRel("flights"));
+                linkTo(methodOn(FlightController.class).allFlights("all","all",0)).withRel("flights"));
     }
 }

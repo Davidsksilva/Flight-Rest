@@ -24,21 +24,24 @@ public class FlightController {
     }
 
     @GetMapping(value = "/voos", produces = "application/json; charset=UTF-8")
-    public Resources<Resource<Flight>> allFlights (@RequestParam(value = "origin", defaultValue = "all") String origin, @RequestParam(value = "destination", defaultValue = "all") String destination ){
+    public Resources<Resource<Flight>> allFlights (@RequestParam(value = "origin", defaultValue = "all") String origin,
+                                                   @RequestParam(value = "destination", defaultValue = "all") String destination,
+                                                   @RequestParam(value = "available_seats", defaultValue = "0") int available_seats){
 
         List<Flight> flights;
         List<Resource<Flight>> flights_resource;
+
         if((destination.equals("all")) && (origin.equals("all"))){
-            flights = flight_repo.findAll();
+            flights = flight_repo.findByAvailableSeats(available_seats);
         }
         else if(destination.equals("all")){
-            flights = flight_repo.findFlightsByOrigin(origin);
+            flights = flight_repo.findByOriginAvailableSeats(origin,available_seats);
         }
         else if(origin.equals("all")){
-            flights = flight_repo.findFlightsByDestination(destination);
+            flights = flight_repo.findByDestinationAvailableSeats(destination, available_seats);
         }
         else{
-            flights = flight_repo.findFlightsByOriginAndDestination(origin,destination);
+            flights = flight_repo.findByOriginDestinationAvailableSeats(origin,destination, available_seats);
         }
 
         flights_resource = flights.stream()
@@ -47,7 +50,7 @@ public class FlightController {
 
 
         return new Resources<>(flights_resource,
-                linkTo(methodOn(FlightController.class).allFlights(origin,destination)).withSelfRel());
+                linkTo(methodOn(FlightController.class).allFlights(origin,destination,available_seats)).withSelfRel());
     }
 
     @GetMapping(value = "/voos/{id}", produces = "application/json; charset=UTF-8")
