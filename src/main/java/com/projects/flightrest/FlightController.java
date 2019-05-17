@@ -77,6 +77,8 @@ public class FlightController {
                 linkTo(methodOn(FlightController.class).allFlightsCompany(id)).withSelfRel());
     }
 
+
+
     /*@PostMapping(value = "/companhias/{code}/voos", produces = "application/json; charset=UTF-8")
     ResponseEntity<?> newFlight(@RequestBody Flight flight) throws URISyntaxException{
 

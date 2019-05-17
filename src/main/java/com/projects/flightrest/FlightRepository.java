@@ -28,4 +28,8 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 
     @Query("select f from Flight f where f.destination = ?1 and(f.num_seats - f.taken_seats) >= ?2")
     List<Flight> findByDestinationAvailableSeats(String destination,int available_seats);
+
+    @Query("select count(f) from Flight f where f.company =?1")
+    Long countCompanyFlights(FlightCompany flight_id);
 }
+
