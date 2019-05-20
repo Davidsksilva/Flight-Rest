@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,6 +77,38 @@ public class FlightController {
 
         return new Resources<>(flights_resource,
                 linkTo(methodOn(FlightController.class).allFlightsCompany(id)).withSelfRel());
+    }
+
+    // Statistics
+    @GetMapping(value = "/voos/estatistica", produces = "application/json; charset=UTF-8")
+    public List<FlightStatistic> allFlightsStatistics (@RequestParam(value = "filter", defaultValue = "destination") String filter){
+
+        List<FlightStatistic> flights_statistics = new ArrayList<FlightStatistic>();
+
+        List<String> uf_list = Arrays.asList("AC", "AL", "AP", "AM", "BA", "CE",
+                "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RR", "RO",
+                "RJ", "RN", "RS", "SC", "SP", "SE", "TO");
+
+        if(filter.equals("destination")){
+            for(int i = 0; i < uf_list.size(); i++){
+                Long flightCount = flight_repo.countFlightsPerDestination(uf_list.get(i));
+                FlightStatistic stats = new FlightStatistic();
+                stats.setFlight_count(flightCount);
+                stats.setFlight_destination(uf_list.get(i));
+                flights_statistics.add(stats);
+            }
+        }
+        else if(filter.equals("origin")){
+            for(int i = 0; i < uf_list.size(); i++){
+                Long flightCount = flight_repo.countFlightsPerOrigin(uf_list.get(i));
+                FlightStatistic stats = new FlightStatistic();
+                stats.setFlight_count(flightCount);
+                stats.setFlight_destination(uf_list.get(i));
+                flights_statistics.add(stats);
+            }
+        }
+
+        return flights_statistics;
     }
 
 

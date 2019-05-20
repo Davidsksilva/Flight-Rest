@@ -31,5 +31,11 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 
     @Query("select count(f) from Flight f where f.company =?1")
     Long countCompanyFlights(FlightCompany flight_id);
+
+    @Query("select count(f) from Flight f where f.destination =?1")
+    Long countFlightsPerDestination(String destination);
+
+    @Query("select count(f) from Flight f where f.origin =?1")
+    Long countFlightsPerOrigin(String origin);
 }
 
