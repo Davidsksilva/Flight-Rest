@@ -44,7 +44,7 @@ public class FlightCompanyController {
         for(int i = 0;i < companies.size(); i++){
 
             Long flightCount = flight_repo.countCompanyFlights(companies.get(i));
-            FlightCompanyStatistic stats = new FlightCompanyStatistic(companies.get(i).getName(),flightCount);
+            FlightCompanyStatistic stats = new FlightCompanyStatistic(companies.get(i).getName(),flightCount, companies.get(i).getId());
 
             companies_statistics.add(stats);
         }

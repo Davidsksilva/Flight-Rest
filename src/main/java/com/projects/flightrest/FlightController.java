@@ -18,10 +18,13 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class FlightController {
 
     private final FlightRepository flight_repo;
+    private final FlightCompanyRepository fc_repo;
+
     private final FlightResourceAssembler flight_assembler;
 
-    FlightController(FlightRepository flight_repo, FlightResourceAssembler flight_assembler) {
+    FlightController(FlightRepository flight_repo, FlightCompanyRepository fc_repo,FlightResourceAssembler flight_assembler) {
         this.flight_repo = flight_repo;
+        this.fc_repo = fc_repo;
         this.flight_assembler = flight_assembler;
     }
 
@@ -81,7 +84,17 @@ public class FlightController {
 
     // Statistics
     @GetMapping(value = "/voos/estatistica", produces = "application/json; charset=UTF-8")
-    public List<FlightStatistic> allFlightsStatistics (@RequestParam(value = "filter", defaultValue = "destination") String filter){
+    public List<FlightStatistic> allFlightsStatistics (@RequestParam(value = "filter", defaultValue = "destination") String filter,
+                                                       @RequestParam(value = "company_id", defaultValue = "-1") Long company_id){
+
+        FlightCompany company;
+        if(company_id != -1){
+            company = fc_repo.findById(company_id)
+                    .orElseThrow(() -> new FlightCompanyNotFoundException(company_id));;
+        }
+        else{
+            company = new FlightCompany();
+        }
 
         List<FlightStatistic> flights_statistics = new ArrayList<FlightStatistic>();
 
@@ -90,13 +103,24 @@ public class FlightController {
                 "RJ", "RN", "RS", "SC", "SP", "SE", "TO");
 
         if(filter.equals("destination")){
+
             for(int i = 0; i < uf_list.size(); i++){
-                Long flightCount = flight_repo.countFlightsPerDestination(uf_list.get(i));
+                Long flightCount;
+                if(company_id == -1){
+                    flightCount = flight_repo.countFlightsPerDestination(uf_list.get(i));
+                }
+                else {
+                    flightCount = flight_repo.countFlightsPerDestinationPerCompany(uf_list.get(i), company);
+                }
+
                 FlightStatistic stats = new FlightStatistic();
                 stats.setFlight_count(flightCount);
                 stats.setFlight_destination(uf_list.get(i));
                 flights_statistics.add(stats);
             }
+
+
+
         }
         else if(filter.equals("origin")){
             for(int i = 0; i < uf_list.size(); i++){
