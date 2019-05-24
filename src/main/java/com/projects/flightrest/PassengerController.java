@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
+// Spring Boot notation informing that the class acts as a Rest Controller
 @RestController
 public class PassengerController {
 
@@ -27,6 +28,7 @@ public class PassengerController {
         this.passenger_assembler = passenger_assembler;
     }
 
+    // Endpoint to list Passengers of a Flight. Using Flight id as @PathVariable id_flight
     @GetMapping(value = "/voos/{id_flight}/passageiros", produces = "application/json; charset=UTF-8")
     public Resources<Resource<Passenger>> allFlightPassengers(@PathVariable Long id_flight){
 
@@ -41,6 +43,7 @@ public class PassengerController {
                 linkTo(methodOn(PassengerController.class).allFlightPassengers(id_flight)).withSelfRel());
     }
 
+    // Endpoint to a single Passenger of a Flight. Using Flight id as @PathVariable id_flight and Passenger id as @PathVariable id_Passenger
     @GetMapping(value = "/voos/{id_flight}/passageiros/{id_passenger}", produces = "application/json; charset=UTF-8")
     public Resource<Passenger> oneFlightPassenger(@PathVariable("id_flight") Long id_flight,
                                          @PathVariable("id_passenger") Long id_passenger){
@@ -50,6 +53,7 @@ public class PassengerController {
         return passenger_assembler.toResource(passenger);
     }
 
+    // Endpoint to a single Flight. Using Flight id as @PathVariable id_flight
     @PostMapping( value = "/voos/{id_flight}", produces = "application/json; charset=UTF-8")
     ResponseEntity<?> newPassenger(@RequestBody Passenger newPassenger, @PathVariable Long id_flight) throws URISyntaxException {
         Flight flight = flight_repo.findById(id_flight)
@@ -76,6 +80,7 @@ public class PassengerController {
 
     }
 
+    // Enpoint to delete a Passenger by id.Using Flight id as @PathVariable id_flight and Passenger id as @PathVariable id_Passenger
     @DeleteMapping (value = "/voos/{id_flight}/passageiros/{id_passenger}", produces = "application/json; charset=UTF-8")
     ResponseEntity<?> deletePassenger(@PathVariable("id_flight") Long id_flight, @PathVariable("id_passenger") Long id_passenger){
         passenger_repo.deleteById(id_flight);

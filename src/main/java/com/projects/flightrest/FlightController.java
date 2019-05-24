@@ -2,10 +2,8 @@ package com.projects.flightrest;
 
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +12,7 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
+// Spring Boot notation informing that the class acts as a Rest Controller
 @RestController
 public class FlightController {
 
@@ -28,6 +27,7 @@ public class FlightController {
         this.flight_assembler = flight_assembler;
     }
 
+    // Endpoint to list Flights, filtering by origin, destination and available seats
     @GetMapping(value = "/voos", produces = "application/json; charset=UTF-8")
     public Resources<Resource<Flight>> allFlights (@RequestParam(value = "origin", defaultValue = "all") String origin,
                                                    @RequestParam(value = "destination", defaultValue = "all") String destination,
@@ -58,6 +58,8 @@ public class FlightController {
                 linkTo(methodOn(FlightController.class).allFlights(origin,destination,available_seats)).withSelfRel());
     }
 
+
+    // Endpoint to a single Flight. Using Flight id as @PathVariable id
     @GetMapping(value = "/voos/{id}", produces = "application/json; charset=UTF-8")
     public Resource<Flight> oneFlight (@PathVariable Long id){
 
@@ -67,6 +69,7 @@ public class FlightController {
         return flight_assembler.toResource(flight);
     }
 
+    // Endpoint to list all Flights of a Flight Company. Using Flight Company id as @PathVariable id
     @GetMapping(value = "/companhias/{id}/voos", produces = "application/json; charset=UTF-8")
     public Resources<Resource<Flight>> allFlightsCompany (@PathVariable Long id){
 
@@ -82,7 +85,7 @@ public class FlightController {
                 linkTo(methodOn(FlightController.class).allFlightsCompany(id)).withSelfRel());
     }
 
-    // Statistics
+    // Endpoint to list Statistics about a Flight. Filtered by flight destinatin or origin and Flight Company id
     @GetMapping(value = "/voos/estatistica", produces = "application/json; charset=UTF-8")
     public List<FlightStatistic> allFlightsStatistics (@RequestParam(value = "filter", defaultValue = "destination") String filter,
                                                        @RequestParam(value = "company_id", defaultValue = "-1") Long company_id){
@@ -134,12 +137,4 @@ public class FlightController {
 
         return flights_statistics;
     }
-
-
-
-    /*@PostMapping(value = "/companhias/{code}/voos", produces = "application/json; charset=UTF-8")
-    ResponseEntity<?> newFlight(@RequestBody Flight flight) throws URISyntaxException{
-
-        Resource<Flight> resource =
-    }*/
 }

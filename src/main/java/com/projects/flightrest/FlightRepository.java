@@ -5,17 +5,11 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
+// Flight repository
 public interface FlightRepository extends JpaRepository<Flight, Long> {
 
-    List<Flight> findFlightsByOriginAndDestination(String origin, String destiny);
 
     List<Flight> findFlightsByCompany_Id(Long code);
-
-    List<Flight> findFlightsByDestination(String dest);
-
-    List<Flight> findFlightsByOrigin(String orig);
-
-    Flight findFlightByIdAndCompany_Id(Long id_f, Long id_fc);
 
     @Query("select f from Flight f where f.origin = ?1 and f.destination = ?2 and (f.num_seats - f.taken_seats) >= ?3")
     List<Flight> findByOriginDestinationAvailableSeats(String origin, String destiny, int available_seats);

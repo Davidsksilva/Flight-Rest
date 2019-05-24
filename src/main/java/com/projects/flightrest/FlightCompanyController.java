@@ -1,17 +1,12 @@
 package com.projects.flightrest;
 
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
+// Spring Boot notation informing that the class acts as a Rest Controller
 @RestController
 public class FlightCompanyController {
 
@@ -24,6 +19,7 @@ public class FlightCompanyController {
         this.flight_repo = flight_repo;
     }
 
+    // Endpoint to list all Flight Companies
     @GetMapping( value = "/companhias", produces = "application/json; charset=UTF-8")
     public List<FlightCompany> allFlightCompanies(){
 
@@ -33,16 +29,18 @@ public class FlightCompanyController {
         return companies;
     }
 
-    // Statistics
+    // Endpoint to list Flight Companies Statistics, containing the number of flights
     @GetMapping(value = "/companhias/estatistica", produces = "application/json; charset=UTF-8")
     public List<FlightCompanyStatistic> allCompaniesStatistics(){
 
         List<FlightCompany> companies = fc_repo.findAll();
 
-        List<FlightCompanyStatistic> companies_statistics = new ArrayList<FlightCompanyStatistic>();
+        List<FlightCompanyStatistic> companies_statistics = new ArrayList<>();
 
+        // Iterate through Flight Companies
         for(int i = 0;i < companies.size(); i++){
 
+            // Get number of flights of each company
             Long flightCount = flight_repo.countCompanyFlights(companies.get(i));
             FlightCompanyStatistic stats = new FlightCompanyStatistic(companies.get(i).getName(),flightCount, companies.get(i).getId());
 

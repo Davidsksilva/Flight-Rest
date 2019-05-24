@@ -3,13 +3,16 @@ package com.projects.flightrest;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.List;
 
+// Lombrok notation for auto-generated getters and setters
 @Data
+// JPA notation to inform that the class is also an entity
 @Entity
 public class FlightCompany {
 
-    private @Id @GeneratedValue (strategy = GenerationType.SEQUENCE) Long id;
+    // Auto Generated Id for Flight Company entity
+    private @Id @GeneratedValue Long id;
+
     private String name;
     private String code;
 

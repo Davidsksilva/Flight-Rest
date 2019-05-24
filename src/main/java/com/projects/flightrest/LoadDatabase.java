@@ -3,25 +3,20 @@ package com.projects.flightrest;
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 @Configuration
 @Slf4j
+// Class used to preload data into database
 public class LoadDatabase {
 
     private static int getRandomIntegerBetweenRange(int min, int max) {
         return (int) (Math.random() * ((max - min) + 1)) + min;
     }
 
-    private boolean getRandomBoolean() {
-        Random random = new Random();
-        return random.nextBoolean();
-    }
-
+    // Uncomment next line to enable preloading
     //@Bean
     CommandLineRunner initDatabase(PassengerRepository p_repo, FlightCompanyRepository fc_repo, FlightRepository f_repo) {
         return args -> {
