@@ -13,59 +13,79 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-// Spring Boot notation informing that the class acts as a Rest Controller
 @RestController
 public class PassengerController {
 
-    private final PassengerRepository passenger_repo;
-    private final FlightRepository flight_repo;
-    private final PassengerResourceAssembler passenger_assembler;
+    private final PassengerRepository passengerRepository;
+    private final FlightRepository flightRepository;
+    private final PassengerResourceAssembler passengerResourceAssembler;
 
-    PassengerController(PassengerRepository passenger_repo,FlightRepository flight_repo, PassengerResourceAssembler passenger_assembler){
+    /**
+     * Constructor method.
+     * @param passengerRepository
+     * @param flightRepository
+     * @param passengerResourceAssembler
+     */
+    PassengerController(PassengerRepository passengerRepository, FlightRepository flightRepository, PassengerResourceAssembler passengerResourceAssembler){
 
-        this.passenger_repo = passenger_repo;
-        this.flight_repo = flight_repo;
-        this.passenger_assembler = passenger_assembler;
+        this.passengerRepository = passengerRepository;
+        this.flightRepository = flightRepository;
+        this.passengerResourceAssembler = passengerResourceAssembler;
     }
 
-    // Endpoint to list Passengers of a Flight. Using Flight id as @PathVariable id_flight
-    @GetMapping(value = "/voos/{id_flight}/passageiros", produces = "application/json; charset=UTF-8")
-    public Resources<Resource<Passenger>> allFlightPassengers(@PathVariable Long id_flight){
+    /**
+     * Endpoint to list Passengers of a Flight.
+     * @param idFlight the Flight id.
+     * @return
+     */
+    @GetMapping(value = "/voos/{idFlight}/passageiros", produces = "application/json; charset=UTF-8")
+    public Resources<Resource<Passenger>> allFlightPassengers(@PathVariable Long idFlight){
 
-        List<Passenger> passengers = passenger_repo.findPassengersByFlight_Id(id_flight);
+        List<Passenger> passengers = passengerRepository.findPassengersByFlight_Id(idFlight);
         List<Resource<Passenger>> passengers_resource;
 
         passengers_resource = passengers.stream()
-                .map(passenger_assembler::toResource)
+                .map(passengerResourceAssembler::toResource)
                 .collect(Collectors.toList());
 
         return new Resources<>(passengers_resource,
-                linkTo(methodOn(PassengerController.class).allFlightPassengers(id_flight)).withSelfRel());
+                linkTo(methodOn(PassengerController.class).allFlightPassengers(idFlight)).withSelfRel());
     }
 
-    // Endpoint to a single Passenger of a Flight. Using Flight id as @PathVariable id_flight and Passenger id as @PathVariable id_Passenger
-    @GetMapping(value = "/voos/{id_flight}/passageiros/{id_passenger}", produces = "application/json; charset=UTF-8")
-    public Resource<Passenger> oneFlightPassenger(@PathVariable("id_flight") Long id_flight,
-                                         @PathVariable("id_passenger") Long id_passenger){
+    /**
+     * Endpoint to a single Passenger of a Flight.
+     * @param idFlight the Flight id.
+     * @param idPassenger the Passenger id.
+     * @return
+     */
+    @GetMapping(value = "/voos/{idFlight}/passageiros/{idPassenger}", produces = "application/json; charset=UTF-8")
+    public Resource<Passenger> oneFlightPassenger(@PathVariable("idFlight") Long idFlight,
+                                         @PathVariable("idPassenger") Long idPassenger){
 
-        Passenger passenger = passenger_repo.findPassengerByIdAndFlight_Id(id_passenger,id_flight);
+        Passenger passenger = passengerRepository.findPassengerByIdAndFlight_Id(idPassenger,idFlight);
 
-        return passenger_assembler.toResource(passenger);
+        return passengerResourceAssembler.toResource(passenger);
     }
 
-    // Endpoint to a single Flight. Using Flight id as @PathVariable id_flight
-    @PostMapping( value = "/voos/{id_flight}", produces = "application/json; charset=UTF-8")
-    ResponseEntity<?> newPassenger(@RequestBody Passenger newPassenger, @PathVariable Long id_flight) throws URISyntaxException {
-        Flight flight = flight_repo.findById(id_flight)
-                .orElseThrow(() -> new FlightNotFoundException(id_flight));
+    /**
+     * Endpoint to a single Flight.
+     * @param newPassenger the Passenger entity to be included.
+     * @param idFlight the Flight id.
+     * @return
+     * @throws URISyntaxException
+     */
+    @PostMapping( value = "/voos/{idFlight}", produces = "application/json; charset=UTF-8")
+    ResponseEntity<?> newPassenger(@RequestBody Passenger newPassenger, @PathVariable Long idFlight) throws URISyntaxException {
+        Flight flight = flightRepository.findById(idFlight)
+                .orElseThrow(() -> new FlightNotFoundException(idFlight));
 
         int available_seats = flight.getNum_seats() - flight.getTaken_seats();
 
         if(available_seats > 1){
             flight.setTaken_seats(flight.getTaken_seats()+1);
             newPassenger.setFlight(flight);
-            flight_repo.save(flight);
-            Resource<Passenger> resource = passenger_assembler.toResource(passenger_repo.save(newPassenger));
+            flightRepository.save(flight);
+            Resource<Passenger> resource = passengerResourceAssembler.toResource(passengerRepository.save(newPassenger));
 
             return ResponseEntity
                     .created(new URI(resource.getId().expand().getHref()))
@@ -73,17 +93,22 @@ public class PassengerController {
         }
         else{
             return ResponseEntity
-                    .created(new URI("/voos/" + id_flight))
+                    .created(new URI("/voos/" + idFlight))
                     .body(null);
         }
 
 
     }
 
-    // Enpoint to delete a Passenger by id.Using Flight id as @PathVariable id_flight and Passenger id as @PathVariable id_Passenger
-    @DeleteMapping (value = "/voos/{id_flight}/passageiros/{id_passenger}", produces = "application/json; charset=UTF-8")
-    ResponseEntity<?> deletePassenger(@PathVariable("id_flight") Long id_flight, @PathVariable("id_passenger") Long id_passenger){
-        passenger_repo.deleteById(id_flight);
+    /**
+     * Endpoint to delete a Passenger by id.
+     * @param idFlight the Flight id.
+     * @param idPassenger the Passenger id.
+     * @return
+     */
+    @DeleteMapping (value = "/voos/{idFlight}/passageiros/{idPassenger}", produces = "application/json; charset=UTF-8")
+    ResponseEntity<?> deletePassenger(@PathVariable("idFlight") Long idFlight, @PathVariable("idPassenger") Long idPassenger){
+        passengerRepository.deleteById(idFlight);
 
         return ResponseEntity.noContent().build();
 

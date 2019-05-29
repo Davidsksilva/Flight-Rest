@@ -4,13 +4,10 @@ import lombok.Data;
 
 import javax.persistence.*;
 
-// Lombrok notation for auto-generated getters and setters
 @Data
-// JPA notation to inform that the class is also an entity
 @Entity
 public class Flight {
 
-    // Auto Generated Id for Flight entity
     private @Id @GeneratedValue Long id;
 
     private String code;

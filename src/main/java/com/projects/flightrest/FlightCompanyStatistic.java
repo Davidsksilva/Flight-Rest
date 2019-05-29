@@ -2,7 +2,6 @@ package com.projects.flightrest;
 
 import lombok.Data;
 
-// Lombrok notation for auto-generated getters and setters
 @Data
 public class FlightCompanyStatistic {
 

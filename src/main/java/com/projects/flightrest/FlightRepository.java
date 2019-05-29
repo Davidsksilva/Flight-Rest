@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-// Flight repository
 public interface FlightRepository extends JpaRepository<Flight, Long> {
 
 

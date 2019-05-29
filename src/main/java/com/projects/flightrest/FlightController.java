@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-// Spring Boot notation informing that the class acts as a Rest Controller
 @RestController
 public class FlightController {
 
@@ -21,13 +20,25 @@ public class FlightController {
 
     private final FlightResourceAssembler flight_assembler;
 
+    /**
+     * Constructor method.
+     * @param flight_repo
+     * @param fc_repo
+     * @param flight_assembler
+     */
     FlightController(FlightRepository flight_repo, FlightCompanyRepository fc_repo,FlightResourceAssembler flight_assembler) {
         this.flight_repo = flight_repo;
         this.fc_repo = fc_repo;
         this.flight_assembler = flight_assembler;
     }
 
-    // Endpoint to list Flights, filtering by origin, destination and available seats
+    /**
+     * Endpoint to list Flights, filtering by origin, destination and available seats.
+     * @param origin
+     * @param destination
+     * @param available_seats
+     * @return
+     */
     @GetMapping(value = "/voos", produces = "application/json; charset=UTF-8")
     public Resources<Resource<Flight>> allFlights (@RequestParam(value = "origin", defaultValue = "all") String origin,
                                                    @RequestParam(value = "destination", defaultValue = "all") String destination,
@@ -59,7 +70,11 @@ public class FlightController {
     }
 
 
-    // Endpoint to a single Flight. Using Flight id as @PathVariable id
+    /**
+     * Endpoint to a single Flight.
+     * @param id the Flight id.
+     * @return
+     */
     @GetMapping(value = "/voos/{id}", produces = "application/json; charset=UTF-8")
     public Resource<Flight> oneFlight (@PathVariable Long id){
 
@@ -69,7 +84,11 @@ public class FlightController {
         return flight_assembler.toResource(flight);
     }
 
-    // Endpoint to list all Flights of a Flight Company. Using Flight Company id as @PathVariable id
+    /**
+     * Endpoint to list all Flights of a Flight Company.
+     * @param id the FlightCompany id.
+     * @return
+     */
     @GetMapping(value = "/companhias/{id}/voos", produces = "application/json; charset=UTF-8")
     public Resources<Resource<Flight>> allFlightsCompany (@PathVariable Long id){
 
@@ -85,7 +104,12 @@ public class FlightController {
                 linkTo(methodOn(FlightController.class).allFlightsCompany(id)).withSelfRel());
     }
 
-    // Endpoint to list Statistics about a Flight. Filtered by flight destinatin or origin and Flight Company id
+    /**
+     * Endpoint to list Statistics about a Flight. Filtered by flight destination or origin and Flight Company id
+     * @param filter
+     * @param company_id
+     * @return
+     */
     @GetMapping(value = "/voos/estatistica", produces = "application/json; charset=UTF-8")
     public List<FlightStatistic> allFlightsStatistics (@RequestParam(value = "filter", defaultValue = "destination") String filter,
                                                        @RequestParam(value = "company_id", defaultValue = "-1") Long company_id){

@@ -9,13 +9,19 @@ import java.util.*;
 
 @Configuration
 @Slf4j
-// Class used to preload data into database
 public class LoadDatabase {
 
     private static int getRandomIntegerBetweenRange(int min, int max) {
         return (int) (Math.random() * ((max - min) + 1)) + min;
     }
 
+    /**
+     * Preload Database
+     * @param p_repo
+     * @param fc_repo
+     * @param f_repo
+     * @return
+     */
     // Uncomment next line to enable preloading
     //@Bean
     CommandLineRunner initDatabase(PassengerRepository p_repo, FlightCompanyRepository fc_repo, FlightRepository f_repo) {
