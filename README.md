@@ -2,8 +2,9 @@
 
 Part of the projet Travel Booking App (TBA),a backend to register flight companies, flights and passangers.
 
-Travel Booking App (TBA): constitutes a project to gain familiarity with the tecnology stack Spring and React. Where the user is able to book a travel package including Flight and Hotel room from a web page grown with React, consuming and feeding multiple REST API's, utilizing the MySQL relational database. Includes a dashboard page using ECharts.
+Travel Booking App (TBA): constitutes a project to gain familiarity with the tecnology stack [Spring](https://spring.io/) and [React](https://reactjs.org/). Where the user is able to book a travel package including Flight and Hotel room from a web page grown with React, consuming and feeding multiple REST API's, utilizing the [MySQL](https://www.mysql.com/) relational database. Includes a dashboard page using [ECharts](https://echarts.baidu.com/).
 
+Refer to the main [repository](https://github.com/Davidsksilva/travel-booking-app).
 
 ## Getting Started
 
@@ -15,7 +16,7 @@ Prerequisites to run the project:
 
 - Gradle 4.10.2;
 - Java 11;
-- Deploy of the database including in [this](https://github.com/Davidsksilva/Travel-Booking-App) repo.
+- Deploy of the database including in [this](https://github.com/Davidsksilva/travel-booking-app) repo.
 
 ### Executing
 
