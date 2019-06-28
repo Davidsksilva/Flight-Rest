@@ -1,43 +1,38 @@
-# [TP] Flight REST
+# [TBA] Flight REST API
 
-Parte do projeto Travel Package (TP), inclui o back-end para registro das companhias aéreas, vôos e clientes.
+Part of the projet Travel Booking App (TBA),a backend to register flight companies, flights and passangers.
 
-**Travel Package (TP):** constitui de um projeto de teste de familiarização com a tecnologia [Spring](https://spring.io/) e [React](https://reactjs.org/). Onde o usuário poderá fazer uma reserva de um pacote de viagem (Vôo + Quarto de Hotel) através de uma página em React, consumindo e alimentando as API's REST de Reserva (armazena o pacote), Vôos (armazena os vôos) e Hotéis (armazena os hotéis) utilizando um banco de dados [MySQL](https://www.mysql.com/). Também é fornecida uma Dashboard  que exibe estatísticas.
+Travel Booking App (TBA): constitutes a project to gain familiarity with the tecnology stack Spring and React. Where the user is able to book a travel package including Flight and Hotel room from a web page grown with React, consuming and feeding multiple REST API's, utilizing the MySQL relational database. Includes a dashboard page using ECharts.
 
-
-
-![diagram](./diagram.png)
 
 ## Getting Started
 
-A seguir serão listadas as informações necessárias para a execução do projeto.
+To run te project, follow the next steps.
 
 ### Prerequisites
 
-Pré-requisitos necessários para a execução do projeto:
+Prerequisites to run the project:
 
 - Gradle 4.10.2;
 - Java 11;
-- Deploy do banco de dados contido [neste](https://github.com/Davidsksilva/Travel-Booking-App) repositório.
+- Deploy of the database including in [this](https://github.com/Davidsksilva/Travel-Booking-App) repo.
 
 ### Executing
 
-Na primeira execução, é necessário pré carregar dados no banco de dados. Para isso no pacote **com.projects.flighrest** e class **LoadDatabase** descomentar a linha *@Bean* em:
+On the first run, its possible to préload some data. To do this, on the package **com.projects.flighrest** and class **LoadDatabase** remove the comment on the line *@Bean*:
 
 ```Java
  //@Bean
     CommandLineRunner initDatabase(PassengerRepository p_repo, FlightCompanyRepository fc_repo, FlightRepository f_repo)
 ```
 
-E em **application.properties** alterar o modo hibernate para **create** , também apenas para a primeira execução:
+And in **application.properties** change the hibernate mode to **create**:
 
 ```properties
 spring.jpa.hibernate.ddl-auto=create
 ```
 
-É importante reverter os passos anteriores para as próximas execuções do programa, evitando a duplicação de dados.
-
-Para a execução do back-end:
+To run the backend:
 
 ```bash
 git clone https://github.com/Davidsksilva/Travel-Booking-App.git
